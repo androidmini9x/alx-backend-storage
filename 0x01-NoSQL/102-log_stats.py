@@ -30,7 +30,7 @@ def run():
         logs_collection.find({'method': 'GET', 'path': '/status'}))
     print('{} status check'.format(len(check_logs)))
     # Print IPs:
-    print('Methods:')
+    print('IPs:')
     query = logs_collection.aggregate([
         {'$group': {'_id': '$ip', 'count': {'$sum': 1}}},
         {'$sort': {'count': -1}},
