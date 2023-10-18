@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-'''
-0. Writing strings to Redis
+'''0. Writing strings to Redis
 '''
 import redis
 import uuid
