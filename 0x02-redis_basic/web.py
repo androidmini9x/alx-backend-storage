@@ -19,12 +19,12 @@ def cache_data(method: Callable) -> Callable:
         '''Increment the called method'''
         key_count = 'count:'.format(args[0])
         key_result = 'cached:'.format(args[0])
-        cache.incr(key_count)
         respone = cache.get(key_result)
         if respone:
             return respone.decode('utf-8')
         # If not exists reset cache count & result
         respone = method(*args, **kwargs)
+        cache.incr(key_count)
         cache.setex(key_result, 10, respone)
         return respone
     return wrapper
