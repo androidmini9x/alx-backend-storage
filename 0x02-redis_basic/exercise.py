@@ -55,7 +55,7 @@ def replay(method: Callable) -> None:
     outputs = store._redis.lrange("{}:outputs".format(method.__qualname__),
                                   0, -1)
     for ins, out in zip(inputs, outputs):
-        print('{}(*{},) -> {}'.format(method.__qualname__,
+        print('{}(*{}) -> {}'.format(method.__qualname__,
                                       ins,
                                       out.decode('utf-8')))
 
