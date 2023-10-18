@@ -10,7 +10,7 @@ from typing import Callable
 cache = redis.Redis()
 
 
-def count_calls(method: Callable) -> Callable:
+def cache_data(method: Callable) -> Callable:
     '''
     Count how many times methods called
     '''
@@ -30,7 +30,7 @@ def count_calls(method: Callable) -> Callable:
     return wrapper
 
 
-@count_calls
+@cache_data
 def get_page(url: str) -> str:
     '''Return HTML content of url'''
     return requests.get(url).text
