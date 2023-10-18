@@ -48,7 +48,7 @@ def replay(method: Callable) -> None:
     store = method.__self__
     count_calls = 0
     if store.get(method.__qualname__) is not None:
-        count_calls = store.get(method.__qualname__)
+        count_calls = int(store.get(method.__qualname__))
     print('{} was called {} times:'.format(method.__qualname__, count_calls))
     inputs = store._redis.lrange("{}:inputs".format(method.__qualname__),
                                  0, -1)
@@ -57,7 +57,7 @@ def replay(method: Callable) -> None:
     for ins, out in zip(inputs, outputs):
         print('{}(*{}) -> {}'.format(method.__qualname__,
                                      ins.decode('utf-8'),
-                                     out))
+                                     out.decode('utf-8')))
 
 
 class Cache:
