@@ -7,15 +7,15 @@ from typing import Union, Callable, Any
 from functools import wraps
 
 
-def count_calls(func: Callable) -> Callable:
+def count_calls(method: Callable) -> Callable:
     '''
     Count how many times methods of the Cache class are called
     '''
-    @wraps(func)
+    @wraps(method)
     def wrapper(self, *args, **kwargs) -> Any:
-        '''Increment the called func'''
-        self._redis.incr(func.__qualname__)
-        return func(self, *args, **kwargs)
+        '''Increment the called method'''
+        self._redis.incr(method.__qualname__)
+        return method(self, *args, **kwargs)
     return wrapper
 
 
