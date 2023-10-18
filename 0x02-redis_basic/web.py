@@ -20,8 +20,9 @@ def cache_data(method: Callable) -> Callable:
         key_count = 'count:'.format(args[0])
         key_result = 'result:'.format(args[0])
         cache.incr(key_count)
-        if cache.exists(key_result) == 1:
-            return cache.get(key_result).decode('utf-8')
+        respone = cache.get(key_result)
+        if respone is not None:
+            return respone.decode('utf-8')
         # If not exists reset cache count & result
         respone = method(*args, **kwargs)
         cache.setex(key_result, 10, respone)
