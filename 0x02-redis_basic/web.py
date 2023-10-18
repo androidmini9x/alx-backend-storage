@@ -32,5 +32,5 @@ def cache_data(method: Callable) -> Callable:
 
 @cache_data
 def get_page(url: str) -> str:
-    '''Return HTML content of url'''
+    '''Return HTML content of particular url'''
     return requests.get(url).text
