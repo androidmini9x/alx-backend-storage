@@ -18,16 +18,16 @@ class Cache:
         key = str(uuid.uuid4())
         self._redis.set(key, data)
         return key
-    
+
     def get(self, key: str, fn: Callable) -> Union[str, bytes, int, float]:
         '''Return data back to the desired format'''
         data = self._redis.get(key)
         return fn(data) if fn is not None else data
-    
+
     def get_str(self, key):
         '''Return data as utf-8 string'''
         return self._redis.get(key, lambda d: d.decode('utf-8'))
-    
+
     def get_int(self, key):
         '''Return data as interger'''
         return self._redis.get(key, int)
