@@ -2,6 +2,8 @@
 '''
 0. Writing strings to Redis
 '''
+
+
 import redis
 import uuid
 from typing import Union
@@ -9,6 +11,7 @@ from typing import Union
 
 class Cache:
     '''Implementation of redis class'''
+
     def __init__(self) -> None:
         '''Init redis cache'''
         self._redis = redis.Redis()
