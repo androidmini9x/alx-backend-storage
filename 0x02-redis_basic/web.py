@@ -1,37 +1,36 @@
 #!/usr/bin/env python3
-'''5. Implementing an expiring web cache and tracker
-'''
+"""
+web cache and tracker
+"""
 import requests
 import redis
 from functools import wraps
-from typing import Callable
+
+store = redis.Redis()
 
 
-cache = redis.Redis()
-
-
-def cache_data(method: Callable) -> Callable:
-    '''
-    Count how many times methods called
-    '''
+def count_url_access(method):
+    """ Decorator counting how many times
+    a URL is accessed """
     @wraps(method)
-    def wrapper(*args, **kwargs) -> str:
-        '''Increment the called method'''
-        key_count = 'count:'.format(args[0])
-        key_result = 'cached:'.format(args[0])
-        respone = cache.get(key_result)
-        if respone:
-            return respone.decode('utf-8')
-        # If not exists reset cache count & result
-        respone = method(*args, **kwargs)
-        cache.incr(key_count)
-        cache.set(key_result, respone)
-        cache.expire(key_result, 10)
-        return respone
+    def wrapper(url):
+        cached_key = "cached:" + url
+        cached_data = store.get(cached_key)
+        if cached_data:
+            return cached_data.decode("utf-8")
+
+        count_key = "count:" + url
+        html = method(url)
+
+        store.incr(count_key)
+        store.set(cached_key, html)
+        store.expire(cached_key, 10)
+        return html
     return wrapper
 
 
-@cache_data
+@count_url_access
 def get_page(url: str) -> str:
-    '''Return HTML content of particular url'''
-    return requests.get(url).text
+    """ Returns HTML content of a url """
+    res = requests.get(url)
+    return res.text
