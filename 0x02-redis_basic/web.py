@@ -25,7 +25,8 @@ def cache_data(method: Callable) -> Callable:
         # If not exists reset cache count & result
         respone = method(*args, **kwargs)
         cache.incr(key_count)
-        cache.setex(key_result, 10, respone)
+        cache.set(key_result, respone)
+        cache.expire(key_result, 10)
         return respone
     return wrapper
 
