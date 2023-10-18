@@ -24,10 +24,10 @@ class Cache:
         data = self._redis.get(key)
         return fn(data) if fn is not None else data
 
-    def get_str(self, key):
+    def get_str(self, key: str) -> str:
         '''Return data as utf-8 string'''
         return self._redis.get(key, lambda d: d.decode('utf-8'))
 
-    def get_int(self, key):
+    def get_int(self, key: str) -> int:
         '''Return data as interger'''
         return self._redis.get(key, int)
