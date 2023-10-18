@@ -1,33 +1,36 @@
 #!/usr/bin/env python3
-"""5. Implementing an expiring web cache and tracker"""
-
-from requests import get
+'''5. Implementing an expiring web cache and tracker
+'''
+import requests
 import redis
 from functools import wraps
 from typing import Callable
 
 
-def track_page_count(method: Callable) -> Callable:
-    """Tracks how many times a particular
-    URL was accessed"""
+cache = redis.Redis()
 
+
+def cache_data(method: Callable) -> Callable:
+    '''
+    Count how many times methods called
+    '''
     @wraps(method)
-    def wrapper(*args, **kwargs):
-        """Inner Wrapper Function"""
-        cache = redis.Redis()
-        url = args[0]
-        key = 'count:' + url
-        cache.incr(key)
-        page = cache.get(url)
-        if page is not None:
-            return page.decode('utf-8')
-        page = method(*args, **kwargs)
-        cache.setex(key, 10, page)
-        return page
+    def wrapper(*args, **kwargs) -> str:
+        '''Increment the called method'''
+        key_count = 'count:'.format(args[0])
+        key_result = 'cached:'.format(args[0])
+        cache.incr(key_count)
+        respone = cache.get(key_result)
+        if respone:
+            return respone.decode('utf-8')
+        # If not exists reset cache count & result
+        respone = method(*args, **kwargs)
+        cache.setex(key_result, 10, respone)
+        return respone
     return wrapper
 
 
+@cache_data
 def get_page(url: str) -> str:
-    """Obtain the HTML content of a particular
-    URL and returns it."""
-    return get(url).text
+    '''Return HTML content of particular url'''
+    return requests.get(url).text
