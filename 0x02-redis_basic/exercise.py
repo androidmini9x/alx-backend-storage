@@ -1,24 +1,23 @@
 #!/usr/bin/env python3
-'''
-0. Writing strings to Redis
+'''A module for using the Redis NoSQL data storage.
 '''
 
-
+from typing import Union
 import redis
 import uuid
-from typing import Union
 
 
 class Cache:
-    '''Implementation of redis class'''
+    '''Represents an object for storing data in a Redis data storage.
+    '''
 
     def __init__(self) -> None:
-        '''Init redis cache'''
         self._redis = redis.Redis()
         self._redis.flushdb(True)
 
-    def store(self, data: Union[str, int, bytes, float]) -> str:
-        '''Store data by generated key'''
-        key = str(uuid.uuid4())
-        self._redis.set(key, data)
-        return key
+    def store(self, data:  Union[str, bytes, int, float]) -> str:
+        '''Stores a value in a Redis data storage and returns the key.
+        '''
+        data_key = str(uuid.uuid4())
+        self._redis.set(data_key, data)
+        return data_key
