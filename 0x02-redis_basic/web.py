@@ -21,7 +21,7 @@ def count_calls(method: Callable) -> Callable:
         if cache.exists(key) == 1:
             cache.incr(key)
         else:
-            cache.setex(key, 10, 1)
+            cache.setex(key, 10, 0)
         return method(url)
     return wrapper
 
