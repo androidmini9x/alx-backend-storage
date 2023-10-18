@@ -7,7 +7,7 @@ from typing import Union
 
 
 class Cache:
-    '''Implementation of redis class'''
+    '''Implementation of redis class that deals with REDIS'''
 
     def __init__(self) -> None:
         self._redis = redis.Redis()
