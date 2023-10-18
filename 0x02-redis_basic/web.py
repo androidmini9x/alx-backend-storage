@@ -17,12 +17,16 @@ def count_calls(method: Callable) -> Callable:
     @wraps(method)
     def wrapper(url) -> str:
         '''Increment the called method'''
-        key = 'count:'.format(url)
-        if cache.exists(key) == 1:
-            cache.incr(key)
-        else:
-            cache.setex(key, 10, 0)
-        return method(url)
+        key_count = 'count:'.format(url)
+        key_result = 'result:'.format(url)
+        cache.incr(key_count)
+        if cache.exists(key_result) == 1:
+            return cache.get(key_result).decode('utf-8')
+        # If not exists reset cache count & result
+        respone = method(url)
+        cache.set(key_count, 0)
+        cache.setex(key_result, 10, respone)
+        return respone
     return wrapper
 
 
